@@ -10,18 +10,26 @@ from scrapy.item import Item, Field
 class SaleonItem(Item):
     # define the fields for your item here like:
 
+    base_sku = Field(type='str')
     identifier = Field(type='str')
+
     title = Field(type='str')
+
     color_name = Field(type='str')
     color_code = Field(type='str')
+
     brand = Field(type='str')
     categories = Field(type='list')
+
     image_urls = Field(type='list')
     url = Field(type='str')
+
     orginal_price = Field(type='str')
     sale_price = Field(type='str')
     full_price = Field(type='str')
-    size_infos = Field(type='str')
+
+    size_infos = Field(type='list')
+
     isonsale = Field()
     isnew = Field()
     available = Field()

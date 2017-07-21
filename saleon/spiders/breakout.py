@@ -4,12 +4,14 @@ __author__ = 'waqarali'
 
 
 import scrapy, copy
+from saleon.items import SaleonItem
 
 class BreakOutSpider(scrapy.Spider):
     name = 'breakout'
     base_url = 'http://www.breakout.com.pk/'
     category_test = False
     product_test = False
+    seen_base_sku = set()
 
     def start_requests(self):
         yield scrapy.Request (url = '',
@@ -44,10 +46,33 @@ class BreakOutSpider(scrapy.Spider):
 
         for product in products:
             p_url = product.css('a[title]').xpath('@href').extract()[0]
+            base_sku = product.xpath('@data-productid').extract()[0]
 
-
-
-
+            if base_sku not in self.seen_base_sku:
+                self.seen_base_sku.add(base_sku)
+                meta = copy.deepcopy(response.meta)
+                meta['base_sku'] = base_sku
+                meta['referer_url']
+                yield scrapy.Request(response.urljoin(p_url), self.parse_detail_page)
             yield scrapy.Request()
 
+
+    def parse_detail_page(self, response):
+        sel = scrapy.Selector(response)
+
+        product_item = SaleonItem()
+        product_item['title'] = sel.css('.product-name>h1').xpath('tect()').extract()[0]
+        product_item['base_sku'] = response.meta.get('base_sku', 'test')
+
+        product_item['url'] = response.url
+        # product_item['categories'] =
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
+        # product_item['']
 
